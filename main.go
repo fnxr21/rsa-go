@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 )
@@ -52,7 +53,7 @@ func main() {
 
 func generatePEMFileOnce() error {
     // Check if PEM file already exists
-    if _, err := ioutil.ReadFile("private.pem"); err == nil {
+    if _, err := os.ReadFile("gate-sap-private.pem"); err == nil {
         return nil // PEM file already exists
     }
 
