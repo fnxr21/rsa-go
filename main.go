@@ -10,41 +10,57 @@ import (
 )
 
 func main() {
-	// // Generate RSA private key
-	// privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
-	// if err != nil {
-	// 	fmt.Println("Error generating private key:", err)
-	// 	return
-	// }
+    // GenerateRsaPem()
 
-	// // Save private key to file
-	// privateKeyPEM := pem.EncodeToMemory(&pem.Block{
-	// 	Type:  "RSA PRIVATE KEY",
-	// 	Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
-	// })
-	// err = ioutil.WriteFile("private.pem", privateKeyPEM, 0600)
-	// if err != nil {
-	// 	fmt.Println("Error saving private key to file:", err)
-	// 	return
-	// }
+    ciphertext,privateKeyFromPEM:=FandiFuc()
 
-	// fmt.Println("Private key saved to private.pem")
+    NinoFuc(ciphertext,privateKeyFromPEM)
 
-	// Load private key from file
+	
+}
+
+
+func GenerateRsaPem()  {
+    	// Generate RSA private key
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		fmt.Println("Error generating private key:", err)
+		return
+	}
+
+	// Save private key to file
+	privateKeyPEM := pem.EncodeToMemory(&pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
+	})
+	err = os.WriteFile("gate-sap-private.pem", privateKeyPEM, 0600)
+	if err != nil {
+		fmt.Println("Error saving private key to file:", err)
+		return
+	}
+
+	fmt.Println("Private key saved to private.pem")
+
+
+}
+
+
+func FandiFuc() ([]byte,*rsa.PrivateKey) {
+    	// Load private key from file
 	privateKeyFile, err := os.ReadFile("gate-sap-private.pem")
 	if err != nil {
 		fmt.Println("Error reading private key from file:", err)
-		return
+		// return
 	}
 	block, _ := pem.Decode(privateKeyFile)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
 		fmt.Println("Error decoding private key")
-		return
+		// return
 	}
 	privateKeyFromPEM, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		fmt.Println("Error parsing private key:", err)
-		return
+		// return
 	}
 
 	// Generate RSA public key
@@ -58,14 +74,19 @@ func main() {
 	fmt.Println(string(publicKeyPEM))
 
 	// Encrypt a message with the public key
-	message := "Hello, RSA!"
+	message := "177823183"
 	ciphertext, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(message))
 	if err != nil {
 		fmt.Println("Error encrypting message:", err)
-		return
+		// return
 	}
 
-	// Decrypt the message with the private key
+    return ciphertext,privateKeyFromPEM
+}
+
+
+func NinoFuc(ciphertext []byte,privateKeyFromPEM *rsa.PrivateKey)  {
+    // Decrypt the message with the private key
 	decryptedMessage, err := rsa.DecryptPKCS1v15(rand.Reader, privateKeyFromPEM, ciphertext)
 	if err != nil {
 		fmt.Println("Error decrypting message:", err)
