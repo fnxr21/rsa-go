@@ -7,12 +7,15 @@ import (
 	"encoding/pem"
 	"fmt"
 	"os"
+
 )
 
 func main() {
     // GenerateRsaPem()
-    ciphertext,privateKeyFromPEM:=FandiFuc()
-    NinoFuc(ciphertext,privateKeyFromPEM)
+    returnMessage,_,_:=FandiFuc("testt")
+
+	fmt.Println(returnMessage)
+    // NinoFuc(ciphertext,privateKeyFromPEM)
 	
 }
 
@@ -41,7 +44,7 @@ func GenerateRsaPem()  {
 }
 
 
-func FandiFuc() ([]byte,*rsa.PrivateKey) {
+func FandiFuc(messageSTR string) (string,[]byte,*rsa.PrivateKey) {
     	// Load private key from file
 	privateKeyFile, err := os.ReadFile("gate-sap-private.pem")
 	if err != nil {
@@ -70,14 +73,14 @@ func FandiFuc() ([]byte,*rsa.PrivateKey) {
 	fmt.Println(string(publicKeyPEM))
 
 	// Encrypt a message with the public key
-	message := "177823183"
+	message := messageSTR
 	ciphertext, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(message))
 	if err != nil {
 		fmt.Println("Error encrypting message:", err)
 		// return
 	}
 
-    return ciphertext,privateKeyFromPEM
+    return message,ciphertext,privateKeyFromPEM
 }
 
 
