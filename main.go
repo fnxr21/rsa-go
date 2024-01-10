@@ -11,23 +11,20 @@ import (
 
 func main() {
     // GenerateRsaPem()
-
     ciphertext,privateKeyFromPEM:=FandiFuc()
-
     NinoFuc(ciphertext,privateKeyFromPEM)
-
 	
 }
 
 
 func GenerateRsaPem()  {
-    	// Generate RSA private key
+    // Generate RSA private key
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		fmt.Println("Error generating private key:", err)
 		return
 	}
-
+    
 	// Save private key to file
 	privateKeyPEM := pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PRIVATE KEY",
@@ -40,7 +37,6 @@ func GenerateRsaPem()  {
 	}
 
 	fmt.Println("Private key saved to private.pem")
-
 
 }
 
